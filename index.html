@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POTATO RUN
+</title>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap">
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+<div id="gameWrap" class="on-menu">
+  <canvas id="game" width="800" height="300"></canvas>
+  <button id="sfxBtn" class="mute-btn sfx-btn" aria-label="Volume dos efeitos sonoros">🔊</button>
+  <button id="musicBtn" class="mute-btn music-btn" aria-label="Volume da música">🎵</button>
+  <button id="hammerHud" class="hammer-hud hidden" aria-label="Atacar com martelo"></button>
+  <div id="hud" class="hidden">
+    <div id="hudTop"><span id="levelLabel">FASE 1</span><span id="distDisplay">0 M / 550 M</span></div>
+    <div id="progressBarOuter"><div id="progressBarInner"></div></div>
+    <div id="bossHud" class="hidden">
+      <span id="bossName">DRAGÃO DAS NUVENS</span>
+      <div id="bossHpPips"></div>
+    </div>
+  </div>
+  <div id="levelSelect" class="overlay">
+    <div id="titleBanner"><span class="flower">🌸</span><h1>FASES</h1><span class="flower">🌸</span></div>
+    <div class="subtitle"><span>♦</span><span>Escolha uma fase</span><span>♦</span></div>
+    <div id="pathSvgWrap">
+      <svg id="pathSvg"></svg>
+      <div id="menuVignette"></div>
+      <button id="playBtn" class="btn hidden">JOGAR</button>
+    </div>
+    <button id="pagePrev" class="page-arrow page-arrow-left" aria-label="Fases anteriores">&#8249;</button>
+    <button id="pageNext" class="page-arrow page-arrow-right" aria-label="Próximas fases">&#8250;</button>
+    <div class="corner-dot bl"></div>
+    <div class="corner-dot br"></div>
+  </div>
+  <div id="endOverlay" class="overlay hidden">
+    <h1 id="endTitle">GAME OVER</h1>
+    <div id="endStars" class="stars"></div>
+    <p id="endText"></p>
+    <button class="btn" id="retryBtn">TENTAR NOVAMENTE</button>
+    <button class="btn secondary" id="mapBtn">MAPA DE FASES</button>
+  </div>
+  <div id="modPasswordOverlay" class="overlay hidden">
+    <h1>ACESSO RESTRITO</h1>
+    <p>Digite a senha para continuar</p>
+    <input id="modPasswordInput" class="mod-input" type="text" autocomplete="off" spellcheck="false" placeholder="senha">
+    <p id="modPasswordError" class="mod-error"></p>
+    <div class="mod-btn-row">
+      <button class="btn" id="modPasswordSubmit">CONFIRMAR</button>
+      <button class="btn secondary" id="modPasswordCancel">CANCELAR</button>
+    </div>
+  </div>
+  <div id="modMenuOverlay" class="overlay hidden">
+    <h1>MOD MENU</h1>
+    <div class="mod-panel">
+      <label class="mod-row"><input type="checkbox" id="modGodMode"> Modo Deus (invencível)</label>
+      <label class="mod-row"><input type="checkbox" id="modHammerUnlock"> Liberar martelo</label>
+      <label class="mod-row"><input type="checkbox" id="modInfiniteHammer"> Martelo sem cooldown</label>
+      <label class="mod-row mod-row-slider">Velocidade
+        <input type="range" id="modSpeedMult" min="0.5" max="2.5" step="0.1" value="1">
+        <span id="modSpeedMultVal">1.0x</span>
+      </label>
+      <button class="btn" id="modUnlockAll">Desbloquear todas as fases</button>
+    </div>
+    <button class="btn secondary" id="modMenuClose">FECHAR</button>
+  </div>
+  <div id="hammerPickupOverlay" class="overlay hidden mc-overlay">
+    <div class="mc-panel">
+      <div class="mc-title">MARTELO OBTIDO!</div>
+      <p class="mc-text">Você encontrou um martelo mágico. Use-o para destruir obstáculos e inimigos na hora — sem levar dano.</p>
+      <p class="mc-text">Aperte <span class="mc-key">E</span> ou toque no ícone do martelo na tela para atacar em um arco à sua frente.</p>
+      <p class="mc-text">Recarrega em <span class="mc-key">6 segundos</span> — use com cuidado!</p>
+      <button class="mc-btn" id="hammerPickupOkBtn">OK</button>
+    </div>
+  </div>
+</div>
+<div id="hint">Espaço / ↑ = Pular (segure para pulo alto) &nbsp;•&nbsp; ↓ = Agachar &nbsp;•&nbsp; ← → / A D = Mover &nbsp;•&nbsp; E = Martelo</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

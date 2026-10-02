@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(& \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Users\\\\carlo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-carlo-Downloads-SPRITES-potato-run-vite\\\\30e5c8c3-e9f2-4bde-834c-8345efc4866a\\\\scratchpad\\\\gen-sfx.js\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Users\\\\carlo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-carlo-Downloads-SPRITES-potato-run-vite\\\\30e5c8c3-e9f2-4bde-834c-8345efc4866a\\\\scratchpad\\\\gen-sfx-2.js\")",
+      "PowerShell(& \"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"C:\\\\Users\\\\carlo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-carlo-Downloads-SPRITES-potato-run-vite\\\\30e5c8c3-e9f2-4bde-834c-8345efc4866a\\\\scratchpad\\\\gen-sfx-3.js\")",
+      "PowerShell($env:PATH = \"C:\\\\Program Files\\\\nodejs;\" + $env:PATH; cd \"c:\\\\Users\\\\carlo\\\\Downloads\\\\SPRITES\\\\potato-run-vite\"; npm run build)",
+      "PowerShell($env:PATH = \"C:\\\\Program Files\\\\nodejs;\" + $env:PATH; npm run build)"
+    ]
+  }
+}

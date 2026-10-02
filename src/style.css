@@ -1,0 +1,114 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a2e; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: 'Courier New', monospace; color: #eee; user-select: none; }
+#gameWrap { position: relative; flex: 0 0 auto; width: 800px; height: 300px; border: 3px solid #4a3b5c; border-radius: 8px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,.5); }
+canvas { display: block; background: #bcd9f7; width: 100%; height: 100%; }
+#hud { position: absolute; top: 8px; left: 10px; right: 10px; display: flex; flex-direction: column; gap: 4px; pointer-events: none; font-size: 12px; font-weight: bold; color: #4a3b5c; text-shadow: 0 1px 2px rgba(255,255,255,.6); }
+#hudTop { display: flex; justify-content: space-between; }
+#progressBarOuter { width: 100%; height: 8px; background: rgba(255,255,255,.4); border: 1px solid rgba(74,59,92,.4); border-radius: 4px; overflow: hidden; }
+#progressBarInner { height: 100%; width: 0; background: #f490b2; transition: width .1s linear; }
+#bossHud { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+#bossName { font-size: 10px; letter-spacing: 1px; color: #7d2f5b; }
+#bossHpPips { display: flex; gap: 4px; }
+#bossHpPips .pip { width: 14px; height: 14px; border-radius: 50%; background: #f490b2; border: 2px solid #b3436b; box-shadow: 0 1px 0 #b3436b; transition: background .15s, transform .15s; }
+#bossHpPips .pip.lost { background: rgba(216,204,214,.5); border-color: rgba(169,159,181,.6); box-shadow: none; transform: scale(.8); }
+.overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(61,43,79,.6); color: #fff; text-align: center; gap: 10px; }
+.hidden { display: none !important; }
+.overlay h1 { font-size: 22px; letter-spacing: 1px; }
+.overlay p { font-size: 13px; opacity: .9; }
+.btn { margin-top: 6px; padding: 10px 22px; font-size: 14px; font-family: inherit; font-weight: bold; background: #f490b2; color: #3d2b4f; border: none; border-radius: 6px; cursor: pointer; box-shadow: 0 3px 0 #b3436b; transition: transform .1s; }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #b3436b; }
+.btn.secondary { background: transparent; color: #fff; border: 2px solid #fff; box-shadow: none; }
+.stars { font-size: 20px; letter-spacing: 4px; color: #ffd166; }
+#gameWrap.on-menu { border: 6px solid #f490b2; box-shadow: 0 0 0 2px #b3436b, 0 0 30px rgba(0,0,0,.5); }
+#gameWrap.on-menu::before, #gameWrap.on-menu::after { content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.35); border: 2px solid rgba(179,67,107,.6); z-index: 5; pointer-events: none; }
+#gameWrap.on-menu::before { top: -3px; left: -3px; }
+#gameWrap.on-menu::after { top: -3px; right: -3px; }
+.corner-dot { position: absolute; width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,.35); border: 2px solid rgba(179,67,107,.6); z-index: 5; pointer-events: none; }
+.corner-dot.bl { bottom: -3px; left: -3px; }
+.corner-dot.br { bottom: -3px; right: -3px; }
+#levelSelect { background-size: cover; background-position: center 65%; justify-content: flex-start; padding: 14px 0 8px; color: #3d2b4f; }
+#titleBanner { position: relative; display: inline-flex; align-items: center; gap: 8px; background: #fdf0e6; border: 3px solid #b3436b; border-radius: 10px; padding: 6px 26px; margin-bottom: 2px; box-shadow: 0 3px 0 #b3436b; }
+#titleBanner .flower { display: inline-block; width: 16px; height: 16px; font-size: 12px; line-height: 16px; }
+#titleBanner h1 { color: #7d2f5b; font-size: 20px; letter-spacing: 3px; margin: 0; }
+#titleBanner::before, #titleBanner::after { content: ''; position: absolute; top: 100%; width: 14px; height: 22px; background: #d9799e; clip-path: polygon(0 0,100% 0,100% 100%,50% 78%,0 100%); }
+#titleBanner::before { left: 10px; }
+#titleBanner::after { right: 10px; }
+#levelSelect .subtitle { color: #7d2f5b; font-size: 11px; margin: 10px 0 6px; display: flex; align-items: center; gap: 8px; }
+#pathSvgWrap { position: relative; flex: 0 0 170px; width: 760px; height: 170px; }
+#pathSvg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.level-node { position: absolute; width: 66px; height: 66px; display: flex; align-items: center; justify-content: center; cursor: pointer; transform: translate(-50%,-50%); transition: left .4s ease, top .4s ease, transform .25s ease, opacity .25s ease; }
+.level-node .card-face { width: 100%; height: 100%; border-radius: 12px; border: 3px solid #b3436b; display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: 0 3px 0 #b3436b, inset 0 0 0 3px rgba(255,255,255,.5); }
+.level-node.unlocked .card-face, .level-node.completed .card-face { background: linear-gradient(160deg,#fdf0e6,#f7d9e6); }
+.level-node.locked .card-face { background: linear-gradient(160deg,#e8e0ea,#d8ccd6); border-color: #a99fb5; box-shadow: 0 3px 0 #a99fb5, inset 0 0 0 3px rgba(255,255,255,.4); }
+.level-node .corner-flower { position: absolute; font-size: 13px; line-height: 1; }
+.level-node .cf-tl { top: -8px; left: -8px; }
+.level-node .cf-tr { top: -8px; right: -8px; transform: scaleX(-1); }
+.level-node .ribbon-tag { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); background: #a94271; color: #fdf0e6; font-size: 11px; font-weight: bold; padding: 3px 10px; border-radius: 6px; box-shadow: 0 2px 0 #7d2f5b; white-space: nowrap; text-align: center; line-height: 1.3; }
+.level-node.locked .ribbon-tag { background: #948a9e; box-shadow: 0 2px 0 #6f6579; }
+.level-node .ribbon-tag .tag-goal { font-size: 8px; opacity: .85; display: block; font-weight: normal; }
+.level-node .node-stars { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); font-size: 10px; color: #ffd166; letter-spacing: 1px; -webkit-text-stroke: .5px #3d2b4f; white-space: nowrap; }
+.level-node.pulse .card-face { animation: pulse 1.4s infinite; }
+/* Roleta: a fase central é destacada (maior, opaca); as vizinhas encolhem e
+   ficam translúcidas, sugerindo profundidade de carrossel. */
+.level-node.carousel-center { transform: translate(-50%,-50%) scale(1.08); opacity: 1; z-index: 3; }
+.level-node.carousel-side { transform: translate(-50%,-50%) scale(0.76); opacity: .55; z-index: 2; }
+.level-node.carousel-center:active { transform: translate(-50%,-50%) scale(1.08) translateY(2px); }
+.level-node.carousel-side:active { transform: translate(-50%,-50%) scale(0.76) translateY(2px); }
+@keyframes pulse { 0% { box-shadow: 0 3px 0 #b3436b, inset 0 0 0 3px rgba(255,255,255,.5), 0 0 0 0 rgba(244,144,178,.7); } 70% { box-shadow: 0 3px 0 #b3436b, inset 0 0 0 3px rgba(255,255,255,.5), 0 0 0 10px rgba(244,144,178,0); } 100% { box-shadow: 0 3px 0 #b3436b, inset 0 0 0 3px rgba(255,255,255,.5), 0 0 0 0 rgba(244,144,178,0); } }
+#playBtn { position: absolute; left: 50%; transform: translateX(-50%); margin-top: 0; padding: 7px 20px; font-size: 12px; z-index: 4; transition: left .4s ease, top .4s ease, transform .1s; }
+#playBtn:active { transform: translateX(-50%) translateY(2px); }
+#menuVignette { position: absolute; left: 2px; bottom: 26px; width: 70px; height: 60px; pointer-events: none; z-index: 1; }
+#menuVignette img { position: absolute; image-rendering: pixelated; }
+#hint { margin-top: 10px; font-size: 11px; color: #7d2f5b; text-align: center; background: #fdf0e6; border: 2px solid #b3436b; border-radius: 20px; padding: 6px 18px; }
+.page-arrow { position: absolute; bottom: 6px; width: 32px; height: 32px; border-radius: 50%; background: #f490b2; color: #3d2b4f; border: 2px solid #b3436b; font-size: 18px; font-weight: bold; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 0 #b3436b; transition: transform .1s; z-index: 6; font-family: inherit; }
+.page-arrow:active { transform: translateY(2px); box-shadow: 0 0 0 #b3436b; }
+.page-arrow:disabled { opacity: .3; cursor: default; box-shadow: 0 2px 0 #b3436b; transform: none; }
+.page-arrow.hidden { display: none !important; }
+.page-arrow-left { left: 6px; }
+.page-arrow-right { right: 6px; }
+.mute-btn { position: absolute; top: 6px; width: 26px; height: 26px; border-radius: 50%; background: #f490b2; color: #3d2b4f; border: 2px solid #b3436b; font-size: 13px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 0 #b3436b; transition: transform .1s, opacity .15s; z-index: 10; font-family: inherit; }
+.mute-btn:active { transform: translateY(2px); box-shadow: 0 0 0 #b3436b; }
+.mute-btn.muted { background: #d8ccd6; border-color: #a99fb5; box-shadow: 0 2px 0 #a99fb5; }
+.sfx-btn { right: 6px; }
+.music-btn { right: 38px; }
+/* nível de volume (0-3) só dá uma pista visual sutil de opacidade — o ícone
+   (setBtn/musicBtn) já muda de emoji/estado no volume 0 (mudo) */
+.mute-btn.vol-1 { opacity: .55; }
+.mute-btn.vol-2 { opacity: .78; }
+.mute-btn.vol-3 { opacity: 1; }
+
+/* HUD circular do ataque de martelo (Fase 5): preenchimento "relógio de
+   pizza" via conic-gradient (--cd-pct vai de 0 a 100 conforme o cooldown
+   esvazia) cobrindo o ícone de baixo pra cima até liberar o ataque. */
+.hammer-hud { position: absolute; left: 6px; bottom: 6px; width: 44px; height: 44px; border-radius: 50%; background: #f490b2; color: #3d2b4f; border: 3px solid #b3436b; font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 3px 0 #b3436b; z-index: 10; font-family: inherit; overflow: hidden; }
+.hammer-hud:active { transform: translateY(2px); box-shadow: 0 1px 0 #b3436b; }
+.hammer-hud-icon { width: 78%; height: 78%; object-fit: contain; image-rendering: pixelated; pointer-events: none; filter: drop-shadow(0 1px 1px rgba(61,43,79,.5)); }
+.hammer-hud::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(rgba(30,15,25,.72) calc(var(--cd-pct, 0) * 1%), transparent 0); pointer-events: none; z-index: 1; }
+.hammer-hud.ready { animation: hammerReady .6s ease; }
+@keyframes hammerReady { 0% { box-shadow: 0 3px 0 #b3436b, 0 0 0 0 rgba(244,144,178,.9); } 60% { box-shadow: 0 3px 0 #b3436b, 0 0 0 12px rgba(244,144,178,0); } 100% { box-shadow: 0 3px 0 #b3436b, 0 0 0 0 rgba(244,144,178,0); } }
+
+/* Mod menu (easter egg): caixa de senha + painel de cheats, mesmo visual
+   das demais overlays (fundo roxo translúcido, cartão rosa/bordô). */
+.mod-input { margin-top: 4px; padding: 8px 12px; font-size: 14px; font-family: inherit; font-weight: bold; text-align: center; letter-spacing: 1px; color: #3d2b4f; background: #fdf0e6; border: 2px solid #b3436b; border-radius: 6px; width: 200px; }
+.mod-input:focus { outline: 2px solid #f490b2; outline-offset: 1px; }
+.mod-error { color: #ffb3c6; font-size: 11px; min-height: 14px; margin-top: -2px; }
+.mod-btn-row { display: flex; gap: 8px; }
+.mod-panel { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; background: rgba(253,240,230,.12); border: 2px solid rgba(244,144,178,.5); border-radius: 10px; padding: 14px 18px; margin: 4px 0; min-width: 220px; }
+.mod-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #fff; cursor: pointer; }
+.mod-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #f490b2; cursor: pointer; }
+.mod-row-slider { gap: 10px; width: 100%; }
+.mod-row-slider input[type="range"] { flex: 1; accent-color: #f490b2; }
+#modSpeedMultVal { font-weight: bold; min-width: 34px; text-align: right; }
+
+/* Diálogo de item coletado (martelo, fim da Fase 3): visual deliberadamente
+   fora da paleta rosa/bordô do resto do jogo — lê como um "pop-up de
+   sistema" tipo Minecraft (painel cinza chapado com bisel em pixel art,
+   fonte Silkscreen, texto com sombra dura característica). */
+.mc-overlay { background: rgba(0,0,0,.6); }
+.mc-panel { font-family: 'Silkscreen', 'Courier New', monospace; background: #c6c6c6; color: #fff; width: 92%; max-width: 460px; padding: 18px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; border: 4px solid #000; box-shadow: inset 2px 2px 0 #fff, inset -2px -2px 0 #555, inset 4px 4px 0 #e2e2e2, inset -4px -4px 0 #808080; image-rendering: pixelated; }
+.mc-title { font-size: 16px; color: #ffea6b; text-shadow: 2px 2px 0 #3f3f00; letter-spacing: 1px; }
+.mc-panel .mc-text { font-size: 10px; line-height: 1.7; color: #fff; opacity: 1; text-shadow: 2px 2px 0 #3f3f3f; margin: 0; }
+.mc-key { display: inline-block; padding: 1px 6px; background: #8b8b8b; color: #fff; border: 2px solid #000; box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #555; font-size: 10px; }
+.mc-btn { margin-top: 8px; padding: 8px 28px; font-family: inherit; font-size: 11px; color: #fff; text-shadow: 2px 2px 0 #3f3f3f; background: #8b8b8b; border: 3px solid #000; box-shadow: inset 2px 2px 0 #d4d4d4, inset -2px -2px 0 #4a4a4a; cursor: pointer; }
+.mc-btn:hover { background: #9e9e9e; }
+.mc-btn:active { box-shadow: inset -2px -2px 0 #d4d4d4, inset 2px 2px 0 #4a4a4a; }
